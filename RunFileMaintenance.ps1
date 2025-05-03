@@ -10,7 +10,10 @@ RunFileMaintenance.ps1
 param (
     [Parameter(Mandatory=$true)]
     [ValidateScript({ Test-Path $_ })]
-    [string]$JsonPath
+    [string]$JsonPath,
+
+    [Parameter(Mandatory=$false)]
+    [string]$ZipPassword
 )
 
 function Write-Log {
@@ -95,7 +98,7 @@ function Get-PeriodStart {
 }
 
 function Compress-Files {
-    param($Spec, [array]$Files)
+    param($Spec, [array]$Files, [string]$ZipPassword)
 
     if (-not $Files) { return }
 
@@ -112,7 +115,7 @@ function Compress-Files {
             $filePaths = $group.Group | ForEach-Object { $_.FullName }
 
             $args = @('a', '-tzip', '-y', '-sdel')
-            if ($Spec.Password) { $args += "-p$($Spec.Password)" }
+            if ($Spec.Password -and $ZipPassword) { $args += "-p$ZipPassword" }
             $args += $zipPath
             $args += $filePaths
 
@@ -138,7 +141,7 @@ try {
             switch ($spec.Action.ToUpper()) {
                 'LIST'     { $files.FullName }
                 'DELETE'   { Delete-Files -Files $files }
-                'COMPRESS' { Compress-Files -Spec $spec -Files $files }
+                'COMPRESS' { Compress-Files -Spec $spec -Files $files -ZipPassword $ZipPassword }
                 default    { Write-Log ERROR "Acción desconocida: $($spec.Action)" }
             }
         } catch {
