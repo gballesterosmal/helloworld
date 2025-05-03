@@ -1,0 +1,25 @@
+[
+  {
+    "Path": "C:/Users/gball/Documents",
+    "Pattern": "*.txt",
+    "Days": 5,
+    "Recurse": true,
+    "Extension": ["txt", "log"],
+    "Action": "COMPRESS",
+    "GroupBy": "month",
+    "Password": true
+  },
+  {
+    "Path": "C:/Users/gball/Downloads",
+    "Pattern": "*.*",
+    "Days": 30,
+    "Recurse": false,
+    "Action": "DELETE"
+  },
+  {
+    "Path": "C:/Logs",
+    "Days": 7,
+    "Action": "LIST",
+    "Recurse": true
+  }
+]
